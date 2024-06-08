@@ -62,4 +62,3 @@ def scrape(url: str) -> List[Offer]:
     page_content = get_page_content(url)
     offers = parse_page(page_content)
     return offers
-
