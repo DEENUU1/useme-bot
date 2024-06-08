@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-import os
 import logging
 from dataclasses import dataclass
 from typing import List, Optional
+from history import LocalVisitedOffers
 
 
 logger = logging.getLogger(__name__)
@@ -32,9 +32,15 @@ def get_page_content(url: str) -> str:
 
 
 def parse_page(content: str) -> List[Optional[Offer]]:
+    offer_history = LocalVisitedOffers()
+
     soup = BeautifulSoup(content, "html.parser")
     offers = []
-    for offer_tag in soup.find_all("article", class_="job"):
+
+    raw_offers = soup.find_all("article", class_="job")
+    logger.info(f"Found {len(raw_offers)} offers")
+
+    for offer_tag in raw_offers:
         category, author, description = None, None, None
 
         title_url = offer_tag.find("a", class_="job__title")
@@ -58,6 +64,13 @@ def parse_page(content: str) -> List[Optional[Offer]]:
             author=author.text.strip() if author else "",
             description=description.text.strip() if description else "",
         )
+
+        if offer_history.check_if_url_exist(offer.url):
+            logger.info(f"Offer {offer.url} already exists in history")
+            continue
+        else:
+            offer_history.add_url_to_file(offer.url)
+
         offers.append(offer)
 
     logger.info(f"Parsed {len(offers)} offers")

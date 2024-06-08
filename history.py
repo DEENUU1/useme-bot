@@ -4,10 +4,11 @@ import os
 class LocalVisitedOffers:
     def __init__(self):
         self.file_name = "visited.txt"
+        self.init_visited()
 
     def init_visited(self):
-        if not os.path.exists(f"{self.file_name}.txt"):
-            with open(f"{self.file_name}.txt", "w") as f:
+        if not os.path.exists(f"{self.file_name}"):
+            with open(f"{self.file_name}", "w") as f:
                 f.write("")
 
     def add_url_to_file(self, url: str):
