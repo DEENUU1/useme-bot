@@ -1,5 +1,6 @@
 import logging
 from scraper import scrape
+from mail import send_email
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -10,7 +11,11 @@ def main():
 
     for url in urls:
         offers = scrape(url)
-        # TODO sand offers by email
+
+        if offers:
+            subject = f"Found {len(offers)} offers"
+            send_email(subject, offers)
+
         logger.info(f"Found {len(offers)} offers")
 
 
