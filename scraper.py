@@ -18,12 +18,6 @@ class Offer:
     author: Optional[str] = None
 
 
-def init_visited():
-    if not os.path.exists("visited.txt"):
-        with open("visited.txt", "w") as f:
-            f.write("")
-
-
 def get_page_content(url: str) -> str:
     try:
         response = requests.get(url)
@@ -66,4 +60,12 @@ def parse_page(content: str) -> List[Optional[Offer]]:
         )
         offers.append(offer)
 
+    logger.info(f"Parsed {len(offers)} offers")
     return offers
+
+
+def scrape(url: str) -> List[Offer]:
+    page_content = get_page_content(url)
+    offers = parse_page(page_content)
+    return offers
+
