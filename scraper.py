@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import List, Optional
 from history import LocalVisitedOffers
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -42,7 +41,7 @@ def parse_page(content: str) -> List[Optional[Offer]]:
         title_url = offer_tag.find("a", class_="job__title")
 
         offer = Offer(
-            url=title_url.get("href"),
+            url=f"https://useme.com{title_url.get("href")}",
             title=title_url.text.strip() if title_url.text else "",
         )
 
@@ -58,7 +57,7 @@ def parse_page(content: str) -> List[Optional[Offer]]:
     return offers
 
 
-def scrape(url: str) -> List[Offer]:
+def scrape_offers(url: str) -> List[Offer]:
     page_content = get_page_content(url)
     offers = parse_page(page_content)
     return offers
