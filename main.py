@@ -20,7 +20,7 @@ class ScrapeRequest(BaseModel):
     url: str
 
 
-@app.get("/scraper")
+@app.post("/scraper")
 def run_scraper_handler(data: ScrapeRequest):
     logger.info(f"Running scraper for {data.url}")
     offers = scrape_offers(data.url)
